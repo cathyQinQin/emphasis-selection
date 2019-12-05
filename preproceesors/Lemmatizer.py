@@ -3,6 +3,7 @@ from preproceesors.PreProcessor import PreProcessor
 
 class Lemmatizer(PreProcessor):
     def __init__(self,):
+        self._name = "lemmatizer"
         self.wnl = WordNetLemmatizer()
 
     def process(self,word,pos_tag):
