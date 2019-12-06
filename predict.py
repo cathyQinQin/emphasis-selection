@@ -22,7 +22,7 @@ def main():
     odir = Path(args.output).parent
     if not odir.is_dir():
         os.mkdir(odir)
-
+    model.load()
     for post,pos_tags  in zip(post_lsts,pos_lsts):
         freqs_lst.append(model.predict(post,pos_tags))
     write_results(word_id_lst,post_lsts,freqs_lst,args.output)

@@ -11,8 +11,8 @@ def model_factory(args):
         print("Stemmer applied")
         p.append(Stemmer())
     if args.model == "topk":
-        print("TopK model selected")
-        return TopKModel(p)
+        print("TopK model with k = {} selected".format(args.k))
+        return TopKModel(p,args.k)
     elif args.model == "base":
         print("Base model selected")
         return BaseModel(p)
