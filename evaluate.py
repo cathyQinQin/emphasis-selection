@@ -18,6 +18,7 @@ def match_m(all_scores, all_labels):
     :param all_scores: submission scores
     :param all_labels: ground_truth labels
     :return: match_m dict
+    The function implementation referenced from https://github.com/RiTUAL-UH/emphasis-2019/blob/master/Emphasis_selection/utils/Evaluation2.py
     """
     print("[LOG] computing Match_m . . .")
     top_m = [1, 2, 3, 4]

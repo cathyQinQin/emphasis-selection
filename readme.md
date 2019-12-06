@@ -21,6 +21,14 @@ for more detail about available arguments, run
 ```
     python train.py --help
 ```
+train topk model with lemmatizer and stemmer
+```
+    python train.py -m topk -l -s
+```
+train topk model without preprocessor
+```
+    python train.py -m topk 
+```
 
 # Predict
 ```
@@ -30,10 +38,21 @@ for more detail about available arguments, run
 ```
     python predict.py --help
 ```
-
+predict useing topk model with lemmatizer and stemmer
+```
+    python predict.py -m topk -l -s
+```
+predict useing topk model without preprocessor
+```
+    python predict.py -m topk 
+```
+predict useing topk model without preprocessor with custom k
+```
+    python predict.py -m topk -k 5
+```
 # Evaluate
 ```
-    python evaluate input output
+    python evaluate.py input output
 ```
 # Testing
 There are plenty of unittests, run

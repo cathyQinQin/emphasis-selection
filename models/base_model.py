@@ -41,7 +41,7 @@ class BaseModel:
     def save(self):
         path = str(self.path().joinpath(self.name))
         
-        with open(path,"wb+") as f:
+        with open(path,"wb") as f:
             pickle.dump({
                 "wc" : self.word_counter,
                 "wf" : self.word_freqs,

@@ -4,8 +4,8 @@ import argparse
 
 def parse_args():
     parser =  argparse.ArgumentParser(description="Train the emphasis selection model")
-    parser.add_argument("-m","--model",nargs=1,choices=["base","topk"],default="topk", help="Type of model to be trained, default is TopK model")
-    parser.add_argument("-i","--input",nargs=1,default="input/ref/train.txt",help="Input dataset for train model, default is input/ref/train.txt")
+    parser.add_argument("-m","--model",action="store",choices=["base","topk"],default="topk", help="Type of model to be trained, default is TopK model")
+    parser.add_argument("-i","--input",default="input/ref/train.txt",help="Input dataset for train model, default is input/ref/train.txt")
     parser.add_argument("-l","--lemmatizer",action="store_true",help="Apply lemmatizer to terms")
     parser.add_argument("-s","--stemmer",action="store_true",help="Apply stem to terms")
     return parser.parse_args()
