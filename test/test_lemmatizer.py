@@ -1,5 +1,5 @@
 import unittest
-from preproceesors.Lemmatizer import Lemmatizer
+from preprocessors import Lemmatizer
 
 class TestLemmatizer(unittest.TestCase):
     def setUp(self):

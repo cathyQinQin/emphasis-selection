@@ -1,5 +1,8 @@
 from collections import Counter 
 import pickle
+from pathlib import Path
+import os
+
 class BaseModel:
     def __init__(self,preprocessors=[]):
         self._name = "base"
@@ -22,19 +25,26 @@ class BaseModel:
             word = p.process(word,pos_tag)
         return word
     
-    def freq(self,word,pos_tag):
+    def freq(self,word,pos_tag = ""):
         if word not in self.word_counter:
             return -1
         wf = self.word_freqs[word]/ self.word_counter[word]
         pf = self.pos_freqs.get(pos_tag,0) / self.pos_counter.get(pos_tag,1)
         return wf * ( pf * abs(wf - pf) + 1)
 
+    def path(self):
+        path = Path(__file__).parent.parent.joinpath("saved/")
+        if not path.exists():
+            os.mkdir(path)
+        return path
+
     def save(self):
-        path = "/saved/" + self.name
+        path = str(self.path().joinpath(self.name))
+        
         with open(path,"wb+") as f:
             pickle.dump({
-                "wc" : self.counter,
-                "wf" : self.freqs,
+                "wc" : self.word_counter,
+                "wf" : self.word_freqs,
                 "pc" : self.pos_counter,
                 "pf" : self.pos_freqs
             },f)
@@ -44,17 +54,23 @@ class BaseModel:
         pass
 
     def load(self):
-        path = "/saved/" + self.name
+        path = self.path().joinpath(self.name)
+
+        if not path.is_file():
+            print("Trained model not found! Make sure to provide same preprocessors(stemmer/lemmatizer/both/none) as you run train.py")
+            exit()
+
         with open(path,"rb") as f:
             data = pickle.load(f)
-            self.counter = data["wc"]
-            self.freqs = data["wf"]
+            self.word_counter = data["wc"]
+            self.word_freqs = data["wf"]
             self.pos_counter = data["pc"] 
             self.pos_freqs = data["pf"]    
-        self._load(path)
+        self._load(str(path))
 
     def _load(self,path):
         pass
+
 
     def train(self,corpus, pos_lsts, e_freq_lsts):
         for words,pos_tags,freqs in zip(corpus, pos_lsts, e_freq_lsts):

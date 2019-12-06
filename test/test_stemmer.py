@@ -1,5 +1,5 @@
 import unittest
-from preproceesors.Stemmer import Stemmer
+from preprocessors import Stemmer
 
 class TestLemmatizer(unittest.TestCase):
     def setUp(self):

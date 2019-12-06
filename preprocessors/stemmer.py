@@ -1,5 +1,5 @@
 from nltk.stem import SnowballStemmer
-from preproceesors.PreProcessor import PreProcessor
+from preprocessors import PreProcessor
 
 class Stemmer(PreProcessor):
     def __init__(self,):

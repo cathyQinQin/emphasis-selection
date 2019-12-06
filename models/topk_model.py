@@ -1,26 +1,29 @@
-from models.BaseModel import BaseModel
+from models import BaseModel
 from gensim.models import word2vec
 
 
 class TopKModel(BaseModel):
-    def __init__(self, preprocessors=[]):
+    def __init__(self, preprocessors=[],k=10):
         super().__init__(preprocessors=preprocessors)
         self._name = "topk"
-        self.model = None
+        self.k = k
+        self.wv_model = None
 
     def _train(self,corpus,pos_lsts,e_freq_lsts):
-        self.w2v = word2vec.Word2Vec(corpus, min_count=1)
+        self.wv_model = word2vec.Word2Vec(corpus, min_count=1)
+    
 
     def _predict(self,words,pos_tags,freqs,unseen):
         if len(unseen) == 0:
             return freqs
-        if not self.model:
+        if not self.wv_model:
             return super()._predict(words,pos_tags,freqs,unseen)
-        self.model.train([words])
+        self.wv_model.build_vocab([words], update=True)
+        self.wv_model.train([words], total_examples=self.wv_model.corpus_count, epochs = self.wv_model.epochs)
         for i in unseen:
             sum_similarity = 0
             sum_freq = 0 
-            for neighbor,similarity in self.model.most_similar(words[i]):
+            for neighbor,similarity in self.wv_model.wv.most_similar(words[i],topn=self.k):
                 freq = self.freq(neighbor)
                 if not freq < 0:
                     sum_similarity += similarity
@@ -30,7 +33,7 @@ class TopKModel(BaseModel):
         return freqs
 
     def _save(self,path):
-        self.model.save(path + ".w2v")
+        self.wv_model.save(path + ".w2v")
 
     def _load(self,path):
-        self.model = word2vec.Word2Vec.load(path + ".w2v")
+        self.wv_model = word2vec.Word2Vec.load(path + ".w2v")

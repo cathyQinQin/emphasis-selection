@@ -1,5 +1,5 @@
 from nltk.stem import WordNetLemmatizer
-from preproceesors.PreProcessor import PreProcessor
+from preprocessors.preprocessor import PreProcessor
 
 class Lemmatizer(PreProcessor):
     def __init__(self,):
@@ -7,4 +7,7 @@ class Lemmatizer(PreProcessor):
         self.wnl = WordNetLemmatizer()
 
     def process(self,word,pos_tag):
-        return self.wnl.lemmatize(word,pos_tag)
+        try:
+            return self.wnl.lemmatize(word,pos_tag.lower()[0])
+        except KeyError:
+            return word
