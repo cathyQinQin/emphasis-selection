@@ -4,7 +4,9 @@ from preproceesors.Lemmatizer import Lemmatizer
 class TestLemmatizer(unittest.TestCase):
     def setUp(self):
         self.p = Lemmatizer()
-        return super().setUp()
+
+    def test_name(self):
+        self.assertEqual(self.p.name,"lemmatizer")
 
     def test_nouns(self):
         self.assertEqual(self.p.process("cars","n"),"car")

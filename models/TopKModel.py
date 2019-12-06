@@ -1,34 +1,36 @@
-from models.Model import Model
+from models.BaseModel import BaseModel
 from gensim.models import word2vec
-from collections import Counter 
 
-class TopKModel(Model):
+
+class TopKModel(BaseModel):
     def __init__(self, preprocessors=[]):
         super().__init__(preprocessors=preprocessors)
-        self._name = "tokp"
+        self._name = "topk"
+        self.model = None
 
-    def train(self,post_lsts, pos_lsts, e_freq_lsts):
-        self.counter = Counter()
-        self.freqs = {}
-        posts = []
-        for posts,pos_tags,freqs in zip(post_lsts, pos_lsts, e_freq_lsts):
-            words = []
-            for word,pos_tag,freq in zip(posts,pos_tags,freqs):
-                word = self.word(word,pos_tag)
-                words.append(word)
+    def _train(self,corpus,pos_lsts,e_freq_lsts):
+        self.w2v = word2vec.Word2Vec(corpus, min_count=1)
 
-                self.counter[word] += 1
-                self.freqs[word] = self.freqs.get(word,0) + float(freq)
-            posts.append(words)
-        self.model = word2vec.Word2Vec(posts, min_count=1)
-
-    def predict(self, post_lsts, pos_lsts):
-        pass
+    def _predict(self,words,pos_tags,freqs,unseen):
+        if len(unseen) == 0:
+            return freqs
+        if not self.model:
+            return super()._predict(words,pos_tags,freqs,unseen)
+        self.model.train([words])
+        for i in unseen:
+            sum_similarity = 0
+            sum_freq = 0 
+            for neighbor,similarity in self.model.most_similar(words[i]):
+                freq = self.freq(neighbor)
+                if not freq < 0:
+                    sum_similarity += similarity
+                    sum_freq += freq * similarity
+            freqs[i] = sum_freq / sum_similarity if sum_similarity > 0 else 0
+        self.train_sentence(words,pos_tags,freqs)
+        return freqs
 
     def _save(self,path):
-        name = "topk"
-        self.model.save(path + "/w2v.model")
+        self.model.save(path + ".w2v")
 
-
-    def load(self,path):
-        pass
+    def _load(self,path):
+        self.model = word2vec.Word2Vec.load(path + ".w2v")

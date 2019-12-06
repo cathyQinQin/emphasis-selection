@@ -4,7 +4,9 @@ from preproceesors.Stemmer import Stemmer
 class TestLemmatizer(unittest.TestCase):
     def setUp(self):
         self.p = Stemmer()
-        return super().setUp()
+
+    def test_name(self):
+        self.assertEqual(self.p.name,"stemmer")
 
     def test_words(self):
         self.assertEqual(self.p.process("having"),"have")

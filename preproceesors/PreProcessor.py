@@ -1,4 +1,4 @@
-from abc import ABC,abstractmethod,property
+from abc import ABC,abstractmethod
 class PreProcessor(ABC):
     def __init__(self):
         self._name = None
